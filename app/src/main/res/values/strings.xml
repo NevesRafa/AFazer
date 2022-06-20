@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AFazer</string>
+    <string name="procurar">Procurar</string>
+    <string name="mais">Mais</string>
+    <string name="excluir">Excluir</string>
+    <string name="detalhes_do_evento">Detalhes do Evento</string>
+    <string name="salvar">Salvar</string>
+    <string name="local">Local</string>
+    <string name="data">Data</string>
+    <string name="titulo">Título</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="endereco">Endereço</string>
+</resources>
