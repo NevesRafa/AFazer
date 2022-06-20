@@ -40,9 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-            app:navigationIcon="@drawable/ic_menu"
-            app:menu="@menu/botao_app_bar"/>
+            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"/>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_evento"
