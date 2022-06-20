@@ -1,5 +1,6 @@
 package com.nevesrafael.afazer.telas.tela_incial
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -48,7 +49,7 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
     fun vincula(
         evento: Evento,
         quandoEstiverSelecionado: (Evento, Boolean) -> Unit,
-       // quandoFizerCliqueLongo: (Evento) -> Boolean,
+        // quandoFizerCliqueLongo: (Evento) -> Boolean,
         quandoFizerCliqueCurto: (Evento) -> Unit
     ) {
         binding.checkboxEvento.text = evento.evento
@@ -56,10 +57,10 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
 
         if (evento.finalizado) {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
-           // binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
+            binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
         } else {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, R.color.black))
-            //TODO: tirar o tracinho
+            binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.and(Paint.STRIKE_THRU_TEXT_FLAG.inv())
         }
 
         binding.checkboxEvento.setOnCheckedChangeListener { _, isChecked ->
