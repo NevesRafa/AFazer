@@ -2,6 +2,7 @@ package com.nevesrafael.afazer.telas.tela_incial
 
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -10,9 +11,9 @@ import com.nevesrafael.afazer.databinding.ItemEventoBinding
 import com.nevesrafael.afazer.model.Evento
 
 class TelaInicialAdapter(
-    val quandoEstiverSelecionado: (Evento, Boolean) -> Unit,
-    //val quandoFizerCliqueLongo: (Evento) -> Boolean,
-    val quandoFizerCliqueCurto: (Evento) -> Unit
+   private val quandoEstiverSelecionado: (Evento, Boolean) -> Unit,
+   private val quandoFizerCliqueLongo: (Evento, View) -> Unit,
+   private val quandoFizerCliqueCurto: (Evento) -> Unit
 ) :
     RecyclerView.Adapter<TelaInicialViewHolder>() {
 
@@ -29,7 +30,7 @@ class TelaInicialAdapter(
         holder.vincula(
             evento,
             quandoEstiverSelecionado,
-            //quandoFizerCliqueLongo,
+            quandoFizerCliqueLongo,
             quandoFizerCliqueCurto
         )
     }
@@ -49,7 +50,7 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
     fun vincula(
         evento: Evento,
         quandoEstiverSelecionado: (Evento, Boolean) -> Unit,
-        // quandoFizerCliqueLongo: (Evento) -> Boolean,
+        quandoFizerCliqueLongo: (Evento, View) -> Unit,
         quandoFizerCliqueCurto: (Evento) -> Unit
     ) {
         binding.checkboxEvento.text = evento.evento
@@ -67,9 +68,10 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
             quandoEstiverSelecionado(evento, isChecked)
         }
 
-//        binding.root.setOnLongClickListener {
-//            quandoFizerCliqueLongo(evento)
-//        }
+        binding.root.setOnLongClickListener {
+            quandoFizerCliqueLongo(evento, binding.root)
+            return@setOnLongClickListener true
+        }
 
         binding.root.setOnClickListener {
             quandoFizerCliqueCurto(evento)

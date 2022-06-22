@@ -50,7 +50,7 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
             binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
 
             if (evento.latitude != null && evento.longitude != null && evento.endereco != null) {
-                marcaLocalizacaoNaTela(evento.latitude, evento.longitude, evento.endereco)
+                marcaLocalizacaoNaTela(evento.latitude!!, evento.longitude!!, evento.endereco!!)
             }
         }
 

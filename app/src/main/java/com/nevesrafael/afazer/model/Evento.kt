@@ -1,17 +1,20 @@
 package com.nevesrafael.afazer.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity
+@Parcelize
 data class Evento(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val evento : String,
-    val data : String,
-    val endereco : String?,
-    val latitude : Double?,
-    val longitude : Double?,
-    val descricao : String?,
+    var evento : String,
+    var data : String,
+    var endereco : String?,
+    var latitude : Double?,
+    var longitude : Double?,
+    var descricao : String?,
     var finalizado : Boolean
 
-)
+): Parcelable

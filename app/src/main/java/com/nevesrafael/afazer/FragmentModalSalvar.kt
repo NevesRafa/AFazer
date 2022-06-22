@@ -18,11 +18,15 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private var latitude: Double? = null
     private var longitude: Double? = null
 
+    private var eventoParaEditar: Evento? = null
+    private var taEditando: Boolean = false
+
     companion object {
         const val REQUEST_CODE_ADDRESS = 123
         const val EXTRA_EVENTO_LATITUDE = "extra.evento.latitude"
         const val EXTRA_EVENTO_LONGITUDE = "extra.evento.longitude"
         const val EXTRA_EVENTO_ENDERECO = "extra.evento.endereco"
+        const val EXTRA_EVENTO_ID_EDITAR = "extra.evento.id.editar"
     }
 
 
@@ -41,27 +45,74 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        configuraBotaoSalvar()
+        verificaSeEstaEditando()
+        configuraBotaoLocal()
+    }
+
+    private fun verificaSeEstaEditando() {
+        val pacotinho = arguments
+
+        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_ID_EDITAR)
+
+        if (eventoParaEditar != null) {
+            taEditando = true
+            binding.evento.setText(eventoParaEditar?.evento)
+            binding.descricao.setText(eventoParaEditar?.descricao)
+            endereco = eventoParaEditar?.endereco
+            latitude = eventoParaEditar?.latitude
+            longitude = eventoParaEditar?.longitude
+        }
+    }
+
+
+    private fun configuraBotaoLocal() {
+        binding.botaoLocal.setOnClickListener {
+            val intent = Intent(context, SelecionaEnderecoActivity::class.java)
+            startActivityForResult(intent, REQUEST_CODE_ADDRESS)
+
+            //TODO: não tá mostrando o endereço ja selecionado !!!
+        }
+    }
+
+    private fun configuraBotaoSalvar() {
         binding.botaoSalvar.setOnClickListener {
-            val evento = Evento(
-                id = 0,
-                data = "",
-                endereco = this.endereco,
-                latitude = this.latitude,
-                longitude = this.longitude,
-                evento = binding.evento.text.toString(),
-                descricao = binding.descricao.text.toString(),
-                finalizado = false
-            )
+
+            val evento: Evento
+            if (taEditando == false) {
+                evento = criarEvento()
+            } else {
+                evento = alterarEventoParaEditar()
+            }
 
             quandoClicarNoSalvar(evento)
             dismissAllowingStateLoss()
         }
+    }
 
-        binding.botaoLocal.setOnClickListener {
-            val intent = Intent(context, SelecionaEnderecoActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADDRESS)
+    private fun alterarEventoParaEditar(): Evento {
+        eventoParaEditar?.apply {
+            evento = binding.evento.text.toString()
+            descricao = binding.descricao.text.toString()
+            endereco = this@FragmentModalSalvar.endereco
+            latitude = this@FragmentModalSalvar.latitude
+            longitude = this@FragmentModalSalvar.longitude
         }
 
+        return eventoParaEditar!!
+    }
+
+    private fun criarEvento(): Evento {
+        return Evento(
+            id = 0,
+            data = "",
+            endereco = this.endereco,
+            latitude = this.latitude,
+            longitude = this.longitude,
+            evento = binding.evento.text.toString(),
+            descricao = binding.descricao.text.toString(),
+            finalizado = false
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
