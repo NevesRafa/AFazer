@@ -27,6 +27,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         const val EXTRA_EVENTO_LONGITUDE = "extra.evento.longitude"
         const val EXTRA_EVENTO_ENDERECO = "extra.evento.endereco"
         const val EXTRA_EVENTO_ID_EDITAR = "extra.evento.id.editar"
+
     }
 
 
@@ -65,10 +66,12 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         }
     }
 
-
     private fun configuraBotaoLocal() {
         binding.botaoLocal.setOnClickListener {
             val intent = Intent(context, SelecionaEnderecoActivity::class.java)
+            intent.putExtra(EXTRA_EVENTO_LONGITUDE, longitude)
+            intent.putExtra(EXTRA_EVENTO_LATITUDE, latitude)
+            intent.putExtra(EXTRA_EVENTO_ENDERECO, endereco)
             startActivityForResult(intent, REQUEST_CODE_ADDRESS)
 
             //TODO: não tá mostrando o endereço ja selecionado !!!

@@ -6,6 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -40,14 +41,35 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { map ->
             mapa = map
+
+            mostraNoMapaSeReceber()
+        }
+    }
+
+    private fun mostraNoMapaSeReceber() {
+        val longitude = intent.getDoubleExtra(FragmentModalSalvar.EXTRA_EVENTO_LONGITUDE, 0.0)
+        val latitude = intent.getDoubleExtra(FragmentModalSalvar.EXTRA_EVENTO_LATITUDE, 0.0)
+        val endereco = intent.getStringExtra(FragmentModalSalvar.EXTRA_EVENTO_ENDERECO)
+
+        if (latitude != 0.0 && longitude != 0.0 && endereco != null) {
+            binding.endereco.setText(endereco, TextView.BufferType.EDITABLE)
+
+            val latLong = LatLng(latitude, longitude)
+
+            val marcador = MarkerOptions().position(latLong).title(endereco)
+            mapa.clear()
+            mapa.addMarker(marcador)
+
+            val movimentoCamera = CameraUpdateFactory.newLatLngZoom(latLong, 15.0F)
+            mapa.moveCamera(movimentoCamera)
         }
     }
 
     private fun configuraFabConfirmar() {
         binding.fabConfirmar.setOnClickListener {
-            if (enderecoSelecionado != null){
+            if (enderecoSelecionado != null) {
                 mandaParaBottomSheetFragment()
-            }else{
+            } else {
                 Toast.makeText(this, "Porfavor selecione um endereço", Toast.LENGTH_SHORT).show()
             }
         }
@@ -91,6 +113,7 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
         val latLong = LatLng(localizacao.latitude, localizacao.longitude)
         val marcador = MarkerOptions().position(latLong).title(localizacao.getAddressLine(0))
 
+        mapa.clear()
         mapa.addMarker(marcador)
 
         val movimentoCamera = CameraUpdateFactory.newLatLngZoom(latLong, 15.0F)
@@ -114,11 +137,20 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
 
     }
 
-    fun mandaParaBottomSheetFragment(){
+    fun mandaParaBottomSheetFragment() {
         val intentParaRetornar = Intent()
-        intentParaRetornar.putExtra(FragmentModalSalvar.EXTRA_EVENTO_LATITUDE,enderecoSelecionado?.latitude)
-        intentParaRetornar.putExtra(FragmentModalSalvar.EXTRA_EVENTO_LONGITUDE,enderecoSelecionado?.longitude)
-        intentParaRetornar.putExtra(FragmentModalSalvar.EXTRA_EVENTO_ENDERECO,enderecoSelecionado?.getAddressLine(0))
+        intentParaRetornar.putExtra(
+            FragmentModalSalvar.EXTRA_EVENTO_LATITUDE,
+            enderecoSelecionado?.latitude
+        )
+        intentParaRetornar.putExtra(
+            FragmentModalSalvar.EXTRA_EVENTO_LONGITUDE,
+            enderecoSelecionado?.longitude
+        )
+        intentParaRetornar.putExtra(
+            FragmentModalSalvar.EXTRA_EVENTO_ENDERECO,
+            enderecoSelecionado?.getAddressLine(0)
+        )
 
         // falo que o resultado foi OK e mando o pacotinho
         setResult(Activity.RESULT_OK, intentParaRetornar)
