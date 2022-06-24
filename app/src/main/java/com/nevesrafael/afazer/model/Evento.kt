@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class Evento(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var evento : String,
-    var data : String,
+    var data : String?,
     var endereco : String?,
     var latitude : Double?,
     var longitude : Double?,

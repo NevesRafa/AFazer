@@ -7,8 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
 import com.nevesrafael.afazer.model.Evento
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     BottomSheetDialogFragment() {
@@ -17,6 +22,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private var endereco: String? = null
     private var latitude: Double? = null
     private var longitude: Double? = null
+    private var data: String? = null
 
     private var eventoParaEditar: Evento? = null
     private var taEditando: Boolean = false
@@ -49,6 +55,49 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         configuraBotaoSalvar()
         verificaSeEstaEditando()
         configuraBotaoLocal()
+        configuraBotaoData()
+    }
+
+    private fun configuraBotaoData() {
+        binding.botaoData.setOnClickListener {
+
+            var dataSelecionada = MaterialDatePicker.todayInUtcMilliseconds() // por padrão hoje
+
+            if (data != null) {
+                val dataComoDate = FormatadorData.stringParaDate(data!!, "dd/MM/yyyy")
+
+                if (dataComoDate != null) {
+                    dataSelecionada = dataComoDate.time // se tiver alguma data, converter
+                }
+            }
+
+            // limitando para datas a partir de hj
+            val limitesDoCalendario = CalendarConstraints.Builder()
+                .setStart(MaterialDatePicker.todayInUtcMilliseconds())
+                .setValidator(DateValidatorPointForward.now())
+                .build()
+
+            val calendario = MaterialDatePicker.Builder
+                .datePicker()
+                .setTitleText("Selecione a data")
+                .setSelection(dataSelecionada)
+                .setCalendarConstraints(limitesDoCalendario) // colocando o limite
+                .build()
+
+            calendario.addOnPositiveButtonClickListener { dataEmMilisegundos ->
+
+                formataMilliEmData(dataEmMilisegundos)
+            }
+            calendario.show(parentFragmentManager, null)
+        }
+    }
+
+    private fun formataMilliEmData(dataEmMilisegundos: Long) {
+        val calendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendario.timeInMillis = dataEmMilisegundos
+
+        val formatador = SimpleDateFormat("dd/MM/yyyy")
+        data = formatador.format(calendario.time)
     }
 
     private fun verificaSeEstaEditando() {
@@ -63,6 +112,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             endereco = eventoParaEditar?.endereco
             latitude = eventoParaEditar?.latitude
             longitude = eventoParaEditar?.longitude
+            data = eventoParaEditar?.data
         }
     }
 
@@ -73,8 +123,6 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             intent.putExtra(EXTRA_EVENTO_LATITUDE, latitude)
             intent.putExtra(EXTRA_EVENTO_ENDERECO, endereco)
             startActivityForResult(intent, REQUEST_CODE_ADDRESS)
-
-            //TODO: não tá mostrando o endereço ja selecionado !!!
         }
     }
 
@@ -108,7 +156,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private fun criarEvento(): Evento {
         return Evento(
             id = 0,
-            data = "",
+            data = data,
             endereco = this.endereco,
             latitude = this.latitude,
             longitude = this.longitude,

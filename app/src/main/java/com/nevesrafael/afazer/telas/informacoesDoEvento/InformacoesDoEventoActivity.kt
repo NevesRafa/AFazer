@@ -13,6 +13,8 @@ import com.nevesrafael.afazer.database.AppDatabase
 import com.nevesrafael.afazer.database.EventoDao
 import com.nevesrafael.afazer.databinding.ActivityInformacoesDoEventoBinding
 import com.nevesrafael.afazer.model.Evento
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class InformacoesDoEventoActivity : AppCompatActivity() {
 
@@ -48,6 +50,9 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
             binding.informacaoEvento.setText(evento.evento, TextView.BufferType.EDITABLE)
             binding.informacaoDescricao.setText(evento.descricao, TextView.BufferType.EDITABLE)
             binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
+            binding.informacaoData.setText(evento.data,TextView.BufferType.EDITABLE)
+
+
 
             if (evento.latitude != null && evento.longitude != null && evento.endereco != null) {
                 marcaLocalizacaoNaTela(evento.latitude!!, evento.longitude!!, evento.endereco!!)
