@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -59,7 +60,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     }
 
     private fun configuraBotaoData() {
-        binding.botaoData.setOnClickListener {
+        binding.data.setOnClickListener {
 
             var dataSelecionada = MaterialDatePicker.todayInUtcMilliseconds() // por padrão hoje
 
@@ -98,6 +99,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
 
         val formatador = SimpleDateFormat("dd/MM/yyyy")
         data = formatador.format(calendario.time)
+
+        binding.data.setText(data,TextView.BufferType.EDITABLE)
     }
 
     private fun verificaSeEstaEditando() {
@@ -110,14 +113,16 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             binding.evento.setText(eventoParaEditar?.evento)
             binding.descricao.setText(eventoParaEditar?.descricao)
             endereco = eventoParaEditar?.endereco
+            binding.local.setText(this.endereco, TextView.BufferType.EDITABLE)
             latitude = eventoParaEditar?.latitude
             longitude = eventoParaEditar?.longitude
             data = eventoParaEditar?.data
+            binding.data.setText(data, TextView.BufferType.EDITABLE)
         }
     }
 
     private fun configuraBotaoLocal() {
-        binding.botaoLocal.setOnClickListener {
+        binding.local.setOnClickListener {
             val intent = Intent(context, SelecionaEnderecoActivity::class.java)
             intent.putExtra(EXTRA_EVENTO_LONGITUDE, longitude)
             intent.putExtra(EXTRA_EVENTO_LATITUDE, latitude)
@@ -148,6 +153,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             endereco = this@FragmentModalSalvar.endereco
             latitude = this@FragmentModalSalvar.latitude
             longitude = this@FragmentModalSalvar.longitude
+            data = this@FragmentModalSalvar.data
         }
 
         return eventoParaEditar!!
@@ -173,6 +179,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             endereco = data?.getStringExtra(EXTRA_EVENTO_ENDERECO)
             latitude = data?.getDoubleExtra(EXTRA_EVENTO_LATITUDE, 0.0)
             longitude = data?.getDoubleExtra(EXTRA_EVENTO_LONGITUDE, 0.0)
+
+            binding.local.setText(endereco, TextView.BufferType.EDITABLE)
         }
 
 

@@ -10,4 +10,5 @@
     <string name="titulo">Título</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="endereco">Endereço</string>
+    <string name="horario">Horário</string>
 </resources>

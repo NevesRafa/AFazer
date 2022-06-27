@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toTopOf="@id/descricao_text_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_edit">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/evento"
@@ -29,55 +30,104 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:hint="@string/detalhes_do_evento"
-        app:layout_constraintBottom_toTopOf="@id/botao_salvar"
+        app:layout_constraintBottom_toTopOf="@id/local_text_input"
         app:layout_constraintEnd_toEndOf="@id/evento_text_input"
         app:layout_constraintStart_toStartOf="@id/evento_text_input"
-        app:layout_constraintTop_toBottomOf="@id/evento_text_input">
+        app:layout_constraintTop_toBottomOf="@id/evento_text_input"
+        app:startIconDrawable="@drawable/ic_edit">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:padding="32dp" />
+            android:lines="3" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/local_text_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/local"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descricao_text_input"
+        app:startIconDrawable="@drawable/ic_local">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/local"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/data_text_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/data"
+        app:layout_constraintBottom_toBottomOf="@id/horario_text_input"
+        app:layout_constraintEnd_toStartOf="@id/horario_text_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/local_text_input"
+        app:startIconDrawable="@drawable/ic_calendario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/horario_text_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/horario"
+        app:layout_constraintBottom_toTopOf="@id/botao_salvar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/data_text_input"
+        app:layout_constraintTop_toBottomOf="@id/local_text_input"
+        app:startIconDrawable="@drawable/ic_relogio">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/botao_horario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/botao_salvar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/salvar"
         app:icon="@drawable/ic_salvar"
-        app:layout_constraintBottom_toBottomOf="@id/botao_data"
-        app:layout_constraintEnd_toEndOf="@id/descricao_text_input"
-        app:layout_constraintStart_toEndOf="@id/botao_local"
-        app:layout_constraintTop_toTopOf="@id/botao_local" />
-
-    <Button
-        android:id="@+id/botao_local"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/local"
-        app:icon="@drawable/ic_local"
-        app:layout_constraintBottom_toBottomOf="@id/botao_data"
-        app:layout_constraintEnd_toStartOf="@id/botao_salvar"
-        app:layout_constraintStart_toEndOf="@id/botao_data"
-        app:layout_constraintTop_toTopOf="@id/botao_data" />
-
-    <Button
-        android:id="@+id/botao_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/data"
-        app:icon="@drawable/ic_calendario"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/botao_local"
-        app:layout_constraintStart_toStartOf="@id/descricao_text_input"
-        app:layout_constraintTop_toBottomOf="@id/descricao_text_input" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horario_text_input"
+
+
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
