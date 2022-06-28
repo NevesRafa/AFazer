@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nevesrafael.afazer.FragmentModalSalvar
+import com.nevesrafael.afazer.telas.criaEvento.FragmentModalSalvar
 import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.database.AppDatabase
 import com.nevesrafael.afazer.database.EventoDao
@@ -28,6 +28,7 @@ class TelaInicialActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraFabAddEvento()
         configuraRecyclerViewEvento()
+
 
     }
 

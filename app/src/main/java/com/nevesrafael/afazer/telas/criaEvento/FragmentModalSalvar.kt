@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer
+package com.nevesrafael.afazer.telas.criaEvento
 
 import android.app.Activity
 import android.content.Intent
@@ -13,8 +13,10 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.nevesrafael.afazer.formatador.FormatadorData
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
 import com.nevesrafael.afazer.model.Evento
+import com.nevesrafael.afazer.telas.mapa.SelecionaEnderecoActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,15 +67,43 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         configuraBotaoHora()
     }
 
+    private fun verificaSeEstaEditando() {
+        val pacotinho = arguments
+
+        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_ID_EDITAR)
+
+        if (eventoParaEditar != null) {
+            taEditando = true
+            binding.evento.setText(eventoParaEditar?.evento)
+            binding.descricao.setText(eventoParaEditar?.descricao)
+            endereco = eventoParaEditar?.endereco
+            binding.local.setText(this.endereco, TextView.BufferType.EDITABLE)
+            latitude = eventoParaEditar?.latitude
+            longitude = eventoParaEditar?.longitude
+            data = eventoParaEditar?.data
+            binding.data.setText(data, TextView.BufferType.EDITABLE)
+            hora = eventoParaEditar?.horario
+            binding.horario.setText(hora, TextView.BufferType.EDITABLE)
+        }
+    }
+
     private fun configuraBotaoHora() {
         binding.horario.setOnClickListener {
-            val picker =
-                MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(horaSelecionada)
-                    .setMinute(minutoSelecionado)
-                    .setTitleText("Selecione o horário")
-                    .build()
+
+            if(hora != null){
+                val horaDividida = hora!!.split(":")
+
+                horaSelecionada = horaDividida[0].toInt()
+                minutoSelecionado = horaDividida[1].toInt()
+            }
+
+            val picker = MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(horaSelecionada)
+                .setMinute(minutoSelecionado)
+                .setTitleText("Selecione o horário")
+                .build()
+
             picker.addOnPositiveButtonClickListener {
                 horaSelecionada = picker.hour
                 minutoSelecionado = picker.minute
@@ -83,7 +113,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
 
             }
 
-            picker.show(parentFragmentManager, null);
+            picker.show(parentFragmentManager, null)
         }
     }
 
@@ -129,26 +159,6 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         data = formatador.format(calendario.time)
 
         binding.data.setText(data, TextView.BufferType.EDITABLE)
-    }
-
-    private fun verificaSeEstaEditando() {
-        val pacotinho = arguments
-
-        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_ID_EDITAR)
-
-        if (eventoParaEditar != null) {
-            taEditando = true
-            binding.evento.setText(eventoParaEditar?.evento)
-            binding.descricao.setText(eventoParaEditar?.descricao)
-            endereco = eventoParaEditar?.endereco
-            binding.local.setText(this.endereco, TextView.BufferType.EDITABLE)
-            latitude = eventoParaEditar?.latitude
-            longitude = eventoParaEditar?.longitude
-            data = eventoParaEditar?.data
-            binding.data.setText(data, TextView.BufferType.EDITABLE)
-            hora = eventoParaEditar?.horario
-            binding.horario.setText(hora, TextView.BufferType.EDITABLE)
-        }
     }
 
     private fun configuraBotaoLocal() {

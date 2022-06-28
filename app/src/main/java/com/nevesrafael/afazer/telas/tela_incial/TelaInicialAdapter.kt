@@ -55,13 +55,21 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
     ) {
         binding.checkboxEvento.text = evento.evento
         binding.checkboxEvento.isChecked = evento.finalizado
+        binding.data.text = evento.data
+        binding.horario.text = evento.horario
 
         if (evento.finalizado) {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
             binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
+            binding.data.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
+            binding.data.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
+            binding.horario.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
+            binding.horario.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
         } else {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, R.color.black))
             binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.and(Paint.STRIKE_THRU_TEXT_FLAG.inv())
+            binding.data.paintFlags = binding.checkboxEvento.paintFlags.and(Paint.STRIKE_THRU_TEXT_FLAG.inv())
+            binding.horario.paintFlags = binding.checkboxEvento.paintFlags.and(Paint.STRIKE_THRU_TEXT_FLAG.inv())
         }
 
         binding.checkboxEvento.setOnCheckedChangeListener { _, isChecked ->

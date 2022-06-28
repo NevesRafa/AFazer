@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer
+package com.nevesrafael.afazer.formatador
 
 import java.text.SimpleDateFormat
 import java.util.*

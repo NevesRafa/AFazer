@@ -10,7 +10,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SelecionaEnderecoActivity" />
+        tools:context=".telas.mapa.SelecionaEnderecoActivity" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/endereco_text_input"

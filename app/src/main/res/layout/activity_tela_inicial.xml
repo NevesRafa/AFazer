@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="16dp"
-    tools:context=".telas.tela_incial.TelaInicialActivity">
+    tools:context=".telas.tela_incial.TelaInicialActivity"
+    android:background="#FFF3E0">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_evento"

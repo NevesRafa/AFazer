@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer
+package com.nevesrafael.afazer.telas.mapa
 
 import android.app.Activity
 import android.content.Intent
@@ -15,6 +15,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.nevesrafael.afazer.telas.criaEvento.FragmentModalSalvar
+import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.databinding.ActivitySelecionaEnderecoBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

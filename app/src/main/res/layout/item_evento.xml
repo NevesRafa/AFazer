@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@drawable/shape_evento"
-    android:foreground="?selectableItemBackground">
+    android:foreground="?selectableItemBackground"
+    >
 
     <CheckBox
         android:id="@+id/checkbox_evento"
@@ -14,7 +15,6 @@
         android:layout_marginStart="16dp"
         android:text="Evento"
         android:textSize="16sp"
-        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -22,6 +22,34 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </CheckBox>
+
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="28/06/2022"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/horario"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="1"
+        android:layout_marginEnd="16dp"
+                />
+
+    <TextView
+        android:id="@+id/horario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:42"
+        app:layout_constraintStart_toEndOf="@id/data"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp"
+
+         />
+
 
 
 
