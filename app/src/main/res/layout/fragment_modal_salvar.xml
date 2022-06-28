@@ -107,10 +107,13 @@
         app:startIconDrawable="@drawable/ic_relogio">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/botao_horario"
+            android:id="@+id/horario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

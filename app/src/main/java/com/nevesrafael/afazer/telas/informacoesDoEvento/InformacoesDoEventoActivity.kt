@@ -51,6 +51,7 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
             binding.informacaoDescricao.setText(evento.descricao, TextView.BufferType.EDITABLE)
             binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
             binding.informacaoData.setText(evento.data,TextView.BufferType.EDITABLE)
+            binding.informacaoHorario.setText(evento.horario,TextView.BufferType.EDITABLE)
 
 
 

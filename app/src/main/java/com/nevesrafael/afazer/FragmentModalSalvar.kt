@@ -11,6 +11,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
 import com.nevesrafael.afazer.model.Evento
 import java.text.SimpleDateFormat
@@ -24,6 +26,9 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private var latitude: Double? = null
     private var longitude: Double? = null
     private var data: String? = null
+    private var hora: String? = null
+    private var horaSelecionada: Int = 12
+    private var minutoSelecionado: Int = 10
 
     private var eventoParaEditar: Evento? = null
     private var taEditando: Boolean = false
@@ -57,6 +62,29 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         verificaSeEstaEditando()
         configuraBotaoLocal()
         configuraBotaoData()
+        configuraBotaoHora()
+    }
+
+    private fun configuraBotaoHora() {
+        binding.horario.setOnClickListener {
+            val picker =
+                MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(horaSelecionada)
+                    .setMinute(minutoSelecionado)
+                    .setTitleText("Selecione o horário")
+                    .build()
+            picker.addOnPositiveButtonClickListener {
+                horaSelecionada = picker.hour
+                minutoSelecionado = picker.minute
+                hora = "$horaSelecionada:$minutoSelecionado"
+
+                binding.horario.setText(hora, TextView.BufferType.EDITABLE)
+
+            }
+
+            picker.show(parentFragmentManager, null);
+        }
     }
 
     private fun configuraBotaoData() {
@@ -100,7 +128,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         val formatador = SimpleDateFormat("dd/MM/yyyy")
         data = formatador.format(calendario.time)
 
-        binding.data.setText(data,TextView.BufferType.EDITABLE)
+        binding.data.setText(data, TextView.BufferType.EDITABLE)
     }
 
     private fun verificaSeEstaEditando() {
@@ -118,6 +146,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             longitude = eventoParaEditar?.longitude
             data = eventoParaEditar?.data
             binding.data.setText(data, TextView.BufferType.EDITABLE)
+            hora = eventoParaEditar?.horario
+            binding.horario.setText(hora, TextView.BufferType.EDITABLE)
         }
     }
 
@@ -154,6 +184,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             latitude = this@FragmentModalSalvar.latitude
             longitude = this@FragmentModalSalvar.longitude
             data = this@FragmentModalSalvar.data
+            horario = this@FragmentModalSalvar.hora
         }
 
         return eventoParaEditar!!
@@ -168,7 +199,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             longitude = this.longitude,
             evento = binding.evento.text.toString(),
             descricao = binding.descricao.text.toString(),
-            finalizado = false
+            finalizado = false,
+            horario = hora
         )
     }
 
