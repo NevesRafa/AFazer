@@ -27,10 +27,11 @@
         <activity
             android:name=".telas.mapa.SelecionaEnderecoActivity"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="Selecione um Local" />
         <activity
             android:name=".telas.informacoesDoEvento.InformacoesDoEventoActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Informações"/>
         <activity
             android:name=".telas.splahScreen.SplashScreenActivity"
             android:exported="true">
