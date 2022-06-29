@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer.telas.criaEvento
+package com.nevesrafael.afazer.telas.cria_evento
 
 import android.app.Activity
 import android.content.Intent
@@ -41,11 +41,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         const val EXTRA_EVENTO_LONGITUDE = "extra.evento.longitude"
         const val EXTRA_EVENTO_ENDERECO = "extra.evento.endereco"
         const val EXTRA_EVENTO_ID_EDITAR = "extra.evento.id.editar"
-
     }
 
-
-    // imagina que esse é o OnCreate parte 1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,8 +52,6 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         return binding.root
     }
 
-
-    // imagina que esse é o OnCreate parte 2
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -144,20 +139,13 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
 
             calendario.addOnPositiveButtonClickListener { dataEmMilisegundos ->
 
-                formataMilliEmData(dataEmMilisegundos)
+               data = FormatadorData.formataMilliEmData(dataEmMilisegundos)
+
+                binding.data.setText(data,TextView.BufferType.EDITABLE)
+
             }
             calendario.show(parentFragmentManager, null)
         }
-    }
-
-    private fun formataMilliEmData(dataEmMilisegundos: Long) {
-        val calendario = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        calendario.timeInMillis = dataEmMilisegundos
-
-        val formatador = SimpleDateFormat("dd/MM/yyyy")
-        data = formatador.format(calendario.time)
-
-        binding.data.setText(data, TextView.BufferType.EDITABLE)
     }
 
     private fun configuraBotaoLocal() {

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".telas.informacoesDoEvento.InformacoesDoEventoActivity"
+    tools:context=".telas.informacoes_evento.InformacoesDoEventoActivity"
     android:background="#FFF3E0">
 
     <fragment

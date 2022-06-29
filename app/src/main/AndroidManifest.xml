@@ -29,11 +29,11 @@
             android:exported="false"
             android:label="Selecione um Local" />
         <activity
-            android:name=".telas.informacoesDoEvento.InformacoesDoEventoActivity"
+            android:name=".telas.informacoes_evento.InformacoesDoEventoActivity"
             android:exported="false"
             android:label="Informações"/>
         <activity
-            android:name=".telas.splahScreen.SplashScreenActivity"
+            android:name=".telas.splah_screen.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

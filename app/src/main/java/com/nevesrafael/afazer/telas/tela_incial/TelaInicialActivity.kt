@@ -6,13 +6,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nevesrafael.afazer.telas.criaEvento.FragmentModalSalvar
+import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.database.AppDatabase
 import com.nevesrafael.afazer.database.EventoDao
 import com.nevesrafael.afazer.databinding.ActivityTelaInicialBinding
 import com.nevesrafael.afazer.model.Evento
-import com.nevesrafael.afazer.telas.informacoesDoEvento.InformacoesDoEventoActivity
+import com.nevesrafael.afazer.telas.informacoes_evento.InformacoesDoEventoActivity
 
 class TelaInicialActivity : AppCompatActivity() {
 
@@ -28,8 +28,6 @@ class TelaInicialActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraFabAddEvento()
         configuraRecyclerViewEvento()
-
-
     }
 
 

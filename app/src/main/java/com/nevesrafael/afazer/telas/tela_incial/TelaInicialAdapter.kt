@@ -61,9 +61,7 @@ class TelaInicialViewHolder(val binding: ItemEventoBinding) :
         if (evento.finalizado) {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
             binding.checkboxEvento.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
-            binding.data.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
             binding.data.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
-            binding.horario.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
             binding.horario.paintFlags = binding.checkboxEvento.paintFlags.or(Paint.STRIKE_THRU_TEXT_FLAG)
         } else {
             binding.checkboxEvento.setTextColor(ContextCompat.getColor(binding.root.context, R.color.black))

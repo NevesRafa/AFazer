@@ -15,7 +15,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.nevesrafael.afazer.telas.criaEvento.FragmentModalSalvar
+import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.databinding.ActivitySelecionaEnderecoBinding
 import kotlinx.coroutines.Dispatchers

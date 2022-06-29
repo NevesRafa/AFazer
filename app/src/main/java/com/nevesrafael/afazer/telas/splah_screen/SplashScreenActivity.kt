@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer.telas.splahScreen
+package com.nevesrafael.afazer.telas.splah_screen
 
 import android.content.Intent
 import android.os.Bundle

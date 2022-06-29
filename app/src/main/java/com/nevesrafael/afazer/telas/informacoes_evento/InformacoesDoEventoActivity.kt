@@ -1,4 +1,4 @@
-package com.nevesrafael.afazer.telas.informacoesDoEvento
+package com.nevesrafael.afazer.telas.informacoes_evento
 
 import android.os.Bundle
 import android.widget.TextView
@@ -12,16 +12,12 @@ import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.database.AppDatabase
 import com.nevesrafael.afazer.database.EventoDao
 import com.nevesrafael.afazer.databinding.ActivityInformacoesDoEventoBinding
-import com.nevesrafael.afazer.model.Evento
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class InformacoesDoEventoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInformacoesDoEventoBinding
     private lateinit var eventoDao: EventoDao
     private var eventoId: Int = 0
-    private var evento: Evento? = null
     private lateinit var mapa: GoogleMap
 
     companion object {
@@ -45,21 +41,21 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
 
 
     private fun carregaEvento() {
-        evento = eventoDao.buscaPorId(eventoId)
-        evento?.let { evento ->
-            binding.informacaoEvento.setText(evento.evento, TextView.BufferType.EDITABLE)
-            binding.informacaoDescricao.setText(evento.descricao, TextView.BufferType.EDITABLE)
-            binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
-            binding.informacaoData.setText(evento.data,TextView.BufferType.EDITABLE)
-            binding.informacaoHorario.setText(evento.horario,TextView.BufferType.EDITABLE)
+        val evento = eventoDao.buscaPorId(eventoId)
 
-
-
-            if (evento.latitude != null && evento.longitude != null && evento.endereco != null) {
-                marcaLocalizacaoNaTela(evento.latitude!!, evento.longitude!!, evento.endereco!!)
-            }
+        if(evento == null){
+            return
         }
 
+        binding.informacaoEvento.setText(evento.evento, TextView.BufferType.EDITABLE)
+        binding.informacaoDescricao.setText(evento.descricao, TextView.BufferType.EDITABLE)
+        binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
+        binding.informacaoData.setText(evento.data, TextView.BufferType.EDITABLE)
+        binding.informacaoHorario.setText(evento.horario, TextView.BufferType.EDITABLE)
+
+        if (evento.latitude != null && evento.longitude != null && evento.endereco != null) {
+            marcaLocalizacaoNaTela(evento.latitude!!, evento.longitude!!, evento.endereco!!)
+        }
     }
 
     private fun marcaLocalizacaoNaTela(latitude: Double, longitude: Double, endereco: String) {
