@@ -13,8 +13,8 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.nevesrafael.afazer.formatador.FormatadorData
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
+import com.nevesrafael.afazer.formatador.FormatadorData
 import com.nevesrafael.afazer.model.Evento
 import com.nevesrafael.afazer.telas.mapa.SelecionaEnderecoActivity
 import java.text.SimpleDateFormat
@@ -90,7 +90,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private fun configuraBotaoHora() {
         binding.horario.setOnClickListener {
 
-            if(hora != null){
+            if (hora != null) {
                 val horaDividida = hora!!.split(":")
 
                 horaSelecionada = horaDividida[0].toInt()
@@ -98,7 +98,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             }
 
             val picker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_12H)
+
+                .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(horaSelecionada)
                 .setMinute(minutoSelecionado)
                 .setTitleText("Selecione o horário")
@@ -107,10 +108,8 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
             picker.addOnPositiveButtonClickListener {
                 horaSelecionada = picker.hour
                 minutoSelecionado = picker.minute
-                hora = "$horaSelecionada:$minutoSelecionado"
-
+                hora = String.format(Locale.getDefault(), "%02d:%02d", horaSelecionada, minutoSelecionado)
                 binding.horario.setText(hora, TextView.BufferType.EDITABLE)
-
             }
 
             picker.show(parentFragmentManager, null)
