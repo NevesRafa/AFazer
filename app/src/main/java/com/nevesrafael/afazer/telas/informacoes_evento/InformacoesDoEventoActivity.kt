@@ -3,6 +3,7 @@ package com.nevesrafael.afazer.telas.informacoes_evento
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -12,13 +13,14 @@ import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.database.AppDatabase
 import com.nevesrafael.afazer.database.EventoDao
 import com.nevesrafael.afazer.databinding.ActivityInformacoesDoEventoBinding
+import com.nevesrafael.afazer.model.Evento
 
 class InformacoesDoEventoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInformacoesDoEventoBinding
-    private lateinit var eventoDao: EventoDao
     private var eventoId: Int = 0
     private lateinit var mapa: GoogleMap
+    private lateinit var presenter: InformacoesDoEventoPresenter
 
     companion object {
         const val EXTRA_EVENTO_RECEBIDO_ID = "extra.evento.recebido.id"
@@ -27,38 +29,27 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInformacoesDoEventoBinding.inflate(layoutInflater)
-        eventoDao = AppDatabase.instancia(this).eventoDao()
         setContentView(binding.root)
         eventoId = intent.getIntExtra(EXTRA_EVENTO_RECEBIDO_ID, 0)
+        presenter = InformacoesDoEventoPresenter(this)
 
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapa) as SupportMapFragment
         mapFragment.getMapAsync { map ->
             mapa = map
-            carregaEvento()
+            presenter.carregaEvento(eventoId)
         }
     }
 
-
-    private fun carregaEvento() {
-        val evento = eventoDao.buscaPorId(eventoId)
-
-        if(evento == null){
-            return
-        }
-
+    fun preencheEvento(evento: Evento){
         binding.informacaoEvento.setText(evento.evento, TextView.BufferType.EDITABLE)
         binding.informacaoDescricao.setText(evento.descricao, TextView.BufferType.EDITABLE)
         binding.informacaoEndereco.setText(evento.endereco, TextView.BufferType.EDITABLE)
         binding.informacaoData.setText(evento.data, TextView.BufferType.EDITABLE)
         binding.informacaoHorario.setText(evento.horario, TextView.BufferType.EDITABLE)
-
-        if (evento.latitude != null && evento.longitude != null && evento.endereco != null) {
-            marcaLocalizacaoNaTela(evento.latitude!!, evento.longitude!!, evento.endereco!!)
-        }
     }
 
-    private fun marcaLocalizacaoNaTela(latitude: Double, longitude: Double, endereco: String) {
+    fun marcaLocalizacaoNaTela(latitude: Double, longitude: Double, endereco: String) {
         val latLong = LatLng(latitude, longitude)
         val marcador = MarkerOptions().position(latLong).title(endereco)
 
@@ -68,4 +59,7 @@ class InformacoesDoEventoActivity : AppCompatActivity() {
         mapa.moveCamera(movimentoCamera)
     }
 
+    fun fechaTela() {
+        finish()
+    }
 }

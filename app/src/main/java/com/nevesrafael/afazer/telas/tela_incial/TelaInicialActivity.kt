@@ -6,90 +6,98 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import com.nevesrafael.afazer.R
-import com.nevesrafael.afazer.database.AppDatabase
-import com.nevesrafael.afazer.database.EventoDao
 import com.nevesrafael.afazer.databinding.ActivityTelaInicialBinding
 import com.nevesrafael.afazer.model.Evento
+import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import com.nevesrafael.afazer.telas.informacoes_evento.InformacoesDoEventoActivity
 
 class TelaInicialActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaInicialBinding
     private lateinit var eventoAdapter: TelaInicialAdapter
-    private lateinit var eventoDao: EventoDao
-
+    private lateinit var presenter: TelaInicialPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTelaInicialBinding.inflate(layoutInflater)
-        eventoDao = AppDatabase.instancia(this).eventoDao()
         setContentView(binding.root)
+        presenter = TelaInicialPresenter(this)
+
         configuraFabAddEvento()
         configuraRecyclerViewEvento()
     }
 
-
     override fun onResume() {
         super.onResume()
-        eventoAdapter.atualiza(eventoDao.buscaTodos())
+        presenter.atualizaListaNaTela()
     }
 
-    private fun configuraRecyclerViewEvento() {
-        eventoAdapter = TelaInicialAdapter(quandoEstiverSelecionado = { evento, taSelecionado ->
-            evento.finalizado = taSelecionado
-            eventoDao.altera(evento)
-            eventoAdapter.atualiza(eventoDao.buscaTodos())
-        }, quandoFizerCliqueCurto = { evento ->
-            val intent = Intent(
-                this, InformacoesDoEventoActivity::class.java
-            )
+    fun configuraFabAddEvento() {
+        binding.fabAddEvento.setOnClickListener {
+            // quando vc clicar no fab tem que abrir um modal, lembra que eu falei que algumas coisas ficam
+            // na activity?
 
+            // mostrar um modal é responsabilidade da tela, agora o que vai ser feito quando clicar
+            // no botão salvar não, isso sim pode ir pro presenter.
+
+            val fragmentModalSalvar = FragmentModalSalvar(quandoClicarNoSalvar = { evento ->
+                presenter.quandoClicaNoSalvar(evento)
+            })
+            fragmentModalSalvar.show(supportFragmentManager, null)
+
+        }
+    }
+
+    fun mostraListaDeEventos(listaDeEventos: List<Evento>) {
+        // to na tela, como eu mostro essa lista?
+
+        eventoAdapter.atualiza(listaDeEventos)
+    }
+
+    // aqui a mesma coisa, o adapter é o cara responsavel por adaptar um Evento pra mostra na tela
+    // então isso é responsa da tela
+    fun configuraRecyclerViewEvento() {
+        // primeira coisa, layout manager
+        binding.recyclerViewEvento.layoutManager = LinearLayoutManager(this)
+
+        // segunda coisa, criar o adapter
+        eventoAdapter = TelaInicialAdapter(quandoEstiverSelecionado = { evento, taSelecionado ->
+            presenter.quandoClicarNoRadio(evento, taSelecionado)
+        }, quandoFizerCliqueCurto = { evento ->
+            val intent = Intent(this, InformacoesDoEventoActivity::class.java)
             intent.putExtra(InformacoesDoEventoActivity.EXTRA_EVENTO_RECEBIDO_ID, evento.id)
             startActivity(intent)
-
         }, quandoFizerCliqueLongo = { evento, itemClicado ->
+
             showPopupMenu(itemClicado, evento)
         })
+
+        // terceira coisa, grudar o adapter naquele recycler
         binding.recyclerViewEvento.adapter = eventoAdapter
-        binding.recyclerViewEvento.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun showPopupMenu(itemClicado: View, evento: Evento) {
+    fun showPopupMenu(itemClicado: View, evento: Evento) {
         val popup = PopupMenu(this, itemClicado)
         popup.menuInflater.inflate(R.menu.menu_excluir_editar, popup.menu)
 
         popup.setOnMenuItemClickListener { menuItem ->
-            if (menuItem.itemId == R.id.menu_excluir) {
-                eventoDao.remove(evento)
-                eventoAdapter.atualiza(eventoDao.buscaTodos())
-            } else if (menuItem.itemId == R.id.menu_editar) {
-
-                val pacotinho = Bundle()
-                pacotinho.putParcelable(FragmentModalSalvar.EXTRA_EVENTO_ID_EDITAR, evento)
-
-                val fragment = FragmentModalSalvar(quandoClicarNoSalvar = { eventoEditado ->
-                    eventoDao.altera(eventoEditado)
-                    eventoAdapter.atualiza(eventoDao.buscaTodos())
-                })
-                fragment.arguments = pacotinho
-                fragment.show(supportFragmentManager, null)
-            }
+            presenter.quandoClicarNoMenu(menuItem, evento)
             return@setOnMenuItemClickListener true
         }
         popup.show()
     }
 
-    private fun configuraFabAddEvento() {
-        binding.fabAddEvento.setOnClickListener {
-            val fragmentModalSalvar = FragmentModalSalvar(quandoClicarNoSalvar = { evento ->
-                eventoDao.salvar(evento)
-                eventoAdapter.atualiza(eventoDao.buscaTodos())
-            })
 
-            fragmentModalSalvar.show(supportFragmentManager, null)
-        }
+    fun mostraModalDeEditar(eventoParaEditar: Evento) {
+        val pacotinho = Bundle()
+        pacotinho.putParcelable(FragmentModalSalvar.EXTRA_EVENTO_EDITAR, eventoParaEditar)
+
+        val fragment = FragmentModalSalvar(quandoClicarNoSalvar = { eventoEditado ->
+            presenter.quandoClicaNoEditar(eventoEditado)
+        })
+        fragment.arguments = pacotinho
+        fragment.show(supportFragmentManager, null)
     }
 
 

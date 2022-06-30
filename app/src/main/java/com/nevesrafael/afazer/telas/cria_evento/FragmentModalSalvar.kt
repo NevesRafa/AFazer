@@ -17,7 +17,6 @@ import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
 import com.nevesrafael.afazer.formatador.FormatadorData
 import com.nevesrafael.afazer.model.Evento
 import com.nevesrafael.afazer.telas.mapa.SelecionaEnderecoActivity
-import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
@@ -40,7 +39,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
         const val EXTRA_EVENTO_LATITUDE = "extra.evento.latitude"
         const val EXTRA_EVENTO_LONGITUDE = "extra.evento.longitude"
         const val EXTRA_EVENTO_ENDERECO = "extra.evento.endereco"
-        const val EXTRA_EVENTO_ID_EDITAR = "extra.evento.id.editar"
+        const val EXTRA_EVENTO_EDITAR = "extra.evento.id.editar"
     }
 
     override fun onCreateView(
@@ -65,7 +64,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     private fun verificaSeEstaEditando() {
         val pacotinho = arguments
 
-        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_ID_EDITAR)
+        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_EDITAR)
 
         if (eventoParaEditar != null) {
             taEditando = true
