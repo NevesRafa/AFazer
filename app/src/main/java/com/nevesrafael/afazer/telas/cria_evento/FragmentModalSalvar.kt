@@ -14,25 +14,14 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
-import com.nevesrafael.afazer.formatador.FormatadorData
 import com.nevesrafael.afazer.model.Evento
 import com.nevesrafael.afazer.telas.mapa.SelecionaEnderecoActivity
-import java.util.*
 
 class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentModalSalvarBinding
-    private var endereco: String? = null
-    private var latitude: Double? = null
-    private var longitude: Double? = null
-    private var data: String? = null
-    private var hora: String? = null
-    private var horaSelecionada: Int = 12
-    private var minutoSelecionado: Int = 10
-
-    private var eventoParaEditar: Evento? = null
-    private var taEditando: Boolean = false
+    private lateinit var presenter: FragmentModalSalvarPresenter
 
     companion object {
         const val REQUEST_CODE_ADDRESS = 123
@@ -49,170 +38,135 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     ): View {
         binding = FragmentModalSalvarBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configuraBotaoSalvar()
-        verificaSeEstaEditando()
+        presenter = FragmentModalSalvarPresenter(this)
+
+        botaoSalvar()
+
         configuraBotaoLocal()
-        configuraBotaoData()
-        configuraBotaoHora()
+        configuraData()
+        configuraHorario()
+        carregaDadosParaEditar()
     }
 
-    private fun verificaSeEstaEditando() {
+    private fun carregaDadosParaEditar() {
         val pacotinho = arguments
-
-        eventoParaEditar = pacotinho?.getParcelable(EXTRA_EVENTO_EDITAR)
-
-        if (eventoParaEditar != null) {
-            taEditando = true
-            binding.evento.setText(eventoParaEditar?.evento)
-            binding.descricao.setText(eventoParaEditar?.descricao)
-            endereco = eventoParaEditar?.endereco
-            binding.local.setText(this.endereco, TextView.BufferType.EDITABLE)
-            latitude = eventoParaEditar?.latitude
-            longitude = eventoParaEditar?.longitude
-            data = eventoParaEditar?.data
-            binding.data.setText(data, TextView.BufferType.EDITABLE)
-            hora = eventoParaEditar?.horario
-            binding.horario.setText(hora, TextView.BufferType.EDITABLE)
-        }
+        val eventoCarregado: Evento? = pacotinho?.getParcelable(EXTRA_EVENTO_EDITAR)
+        presenter.verificaSeEstaEditando(eventoCarregado)
     }
 
-    private fun configuraBotaoHora() {
+    fun preencheDadosNaTelaParaEdicao(eventoParaEditar: Evento?) {
+        binding.evento.setText(eventoParaEditar?.evento)
+        binding.descricao.setText(eventoParaEditar?.descricao)
+        binding.local.setText(eventoParaEditar?.endereco, TextView.BufferType.EDITABLE)
+        binding.data.setText(eventoParaEditar?.data, TextView.BufferType.EDITABLE)
+        binding.horario.setText(eventoParaEditar?.horario, TextView.BufferType.EDITABLE)
+    }
+
+    fun configuraHorario() {
         binding.horario.setOnClickListener {
 
-            if (hora != null) {
-                val horaDividida = hora!!.split(":")
-
-                horaSelecionada = horaDividida[0].toInt()
-                minutoSelecionado = horaDividida[1].toInt()
-            }
-
-            val picker = MaterialTimePicker.Builder()
-
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(horaSelecionada)
-                .setMinute(minutoSelecionado)
-                .setTitleText("Selecione o horário")
-                .build()
-
-            picker.addOnPositiveButtonClickListener {
-                horaSelecionada = picker.hour
-                minutoSelecionado = picker.minute
-                hora = String.format(Locale.getDefault(), "%02d:%02d", horaSelecionada, minutoSelecionado)
-                binding.horario.setText(hora, TextView.BufferType.EDITABLE)
-            }
-
-            picker.show(parentFragmentManager, null)
+            presenter.verificaHorarioSelecionado()
         }
     }
 
-    private fun configuraBotaoData() {
-        binding.data.setOnClickListener {
+    fun mostraSeletorDeHora(horaPadrao: Int, minutoPadrao: Int) {
+        val picker = MaterialTimePicker.Builder()
 
-            var dataSelecionada = MaterialDatePicker.todayInUtcMilliseconds() // por padrão hoje
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(horaPadrao)
+            .setMinute(minutoPadrao)
+            .setTitleText("Selecione o horário")
+            .build()
 
-            if (data != null) {
-                val dataComoDate = FormatadorData.stringParaDate(data!!, "dd/MM/yyyy")
+        picker.addOnPositiveButtonClickListener {
 
-                if (dataComoDate != null) {
-                    dataSelecionada = dataComoDate.time // se tiver alguma data, converter
-                }
-            }
-
-            // limitando para datas a partir de hj
-            val limitesDoCalendario = CalendarConstraints.Builder()
-                .setStart(MaterialDatePicker.todayInUtcMilliseconds())
-                .setValidator(DateValidatorPointForward.now())
-                .build()
-
-            val calendario = MaterialDatePicker.Builder
-                .datePicker()
-                .setTitleText("Selecione a data")
-                .setSelection(dataSelecionada)
-                .setCalendarConstraints(limitesDoCalendario) // colocando o limite
-                .build()
-
-            calendario.addOnPositiveButtonClickListener { dataEmMilisegundos ->
-
-               data = FormatadorData.formataMilliEmData(dataEmMilisegundos)
-
-                binding.data.setText(data,TextView.BufferType.EDITABLE)
-
-            }
-            calendario.show(parentFragmentManager, null)
+            presenter.quandoSelecionaHora(picker.hour, picker.minute)
         }
+
+        picker.show(parentFragmentManager, null)
+    }
+
+    fun escreveHorarioNaTela(horarioSelecionado: String) {
+        binding.horario.setText(horarioSelecionado, TextView.BufferType.EDITABLE)
+    }
+
+    private fun configuraData() {
+        binding.data.setOnClickListener {
+            presenter.verificaDataSelecionada()
+        }
+    }
+
+    fun mostraSeletorData(dataPadrao: Long) {
+        // limitando para datas a partir de hj
+        val limitesDoCalendario = CalendarConstraints.Builder()
+            .setStart(MaterialDatePicker.todayInUtcMilliseconds())
+            .setValidator(DateValidatorPointForward.now())
+            .build()
+
+        val calendario = MaterialDatePicker.Builder
+            .datePicker()
+            .setTitleText("Selecione a data")
+            .setSelection(dataPadrao)
+            .setCalendarConstraints(limitesDoCalendario) // colocando o limite
+            .build()
+
+        calendario.addOnPositiveButtonClickListener {
+            presenter.quandoSelecionaData(it)
+        }
+        calendario.show(parentFragmentManager, null)
+    }
+
+    fun escreveDataNaTela(dataSelecionada: String?) {
+        binding.data.setText(dataSelecionada, TextView.BufferType.EDITABLE)
     }
 
     private fun configuraBotaoLocal() {
         binding.local.setOnClickListener {
             val intent = Intent(context, SelecionaEnderecoActivity::class.java)
-            intent.putExtra(EXTRA_EVENTO_LONGITUDE, longitude)
-            intent.putExtra(EXTRA_EVENTO_LATITUDE, latitude)
-            intent.putExtra(EXTRA_EVENTO_ENDERECO, endereco)
+            intent.putExtra(EXTRA_EVENTO_LONGITUDE, presenter.getLongitude())
+            intent.putExtra(EXTRA_EVENTO_LATITUDE, presenter.getLatitude())
+            intent.putExtra(EXTRA_EVENTO_ENDERECO, presenter.getEndereco())
             startActivityForResult(intent, REQUEST_CODE_ADDRESS)
         }
     }
 
-    private fun configuraBotaoSalvar() {
+    private fun botaoSalvar() {
         binding.botaoSalvar.setOnClickListener {
 
-            val evento: Evento
-            if (taEditando == false) {
-                evento = criarEvento()
-            } else {
-                evento = alterarEventoParaEditar()
-            }
-
-            quandoClicarNoSalvar(evento)
-            dismissAllowingStateLoss()
+            val eventoDigitado = binding.evento.text.toString()
+            val descricaoDigitada = binding.descricao.text.toString()
+            presenter.verificaParaSalvarOuEditar(eventoDigitado, descricaoDigitada)
         }
-    }
-
-    private fun alterarEventoParaEditar(): Evento {
-        eventoParaEditar?.apply {
-            evento = binding.evento.text.toString()
-            descricao = binding.descricao.text.toString()
-            endereco = this@FragmentModalSalvar.endereco
-            latitude = this@FragmentModalSalvar.latitude
-            longitude = this@FragmentModalSalvar.longitude
-            data = this@FragmentModalSalvar.data
-            horario = this@FragmentModalSalvar.hora
-        }
-
-        return eventoParaEditar!!
-    }
-
-    private fun criarEvento(): Evento {
-        return Evento(
-            id = 0,
-            data = data,
-            endereco = this.endereco,
-            latitude = this.latitude,
-            longitude = this.longitude,
-            evento = binding.evento.text.toString(),
-            descricao = binding.descricao.text.toString(),
-            finalizado = false,
-            horario = hora
-        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_ADDRESS && resultCode == Activity.RESULT_OK) {
-            endereco = data?.getStringExtra(EXTRA_EVENTO_ENDERECO)
-            latitude = data?.getDoubleExtra(EXTRA_EVENTO_LATITUDE, 0.0)
-            longitude = data?.getDoubleExtra(EXTRA_EVENTO_LONGITUDE, 0.0)
+            val endereco = data?.getStringExtra(EXTRA_EVENTO_ENDERECO)
+            val latitude = data?.getDoubleExtra(EXTRA_EVENTO_LATITUDE, 0.0)
+            val longitude = data?.getDoubleExtra(EXTRA_EVENTO_LONGITUDE, 0.0)
 
-            binding.local.setText(endereco, TextView.BufferType.EDITABLE)
+            presenter.quandoVoltaDaTelaMapa(endereco, longitude, latitude)
         }
-
-
     }
+
+    fun mostraLocalNoCampo(endereco: String?) {
+        binding.local.setText(endereco, TextView.BufferType.EDITABLE)
+    }
+
+    fun salvarOuEditar(evento: Evento) {
+        quandoClicarNoSalvar(evento)
+        dismissAllowingStateLoss()
+    }
+
+
 }
 
 
