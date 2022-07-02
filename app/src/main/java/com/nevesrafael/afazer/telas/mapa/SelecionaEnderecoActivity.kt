@@ -15,9 +15,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.databinding.ActivitySelecionaEnderecoBinding
+import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,6 +26,7 @@ import java.io.IOException
 
 class SelecionaEnderecoActivity : AppCompatActivity() {
 
+    private lateinit var presenter: SelecionaEnderecoPresenter
     private lateinit var mapa: GoogleMap
     private lateinit var binding: ActivitySelecionaEnderecoBinding
     private var enderecoSelecionado: Address? = null
@@ -35,7 +36,7 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySelecionaEnderecoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        presenter = SelecionaEnderecoPresenter(this)
         clickDoIcone()
         configuraFabConfirmar()
 
@@ -53,28 +54,27 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
         val latitude = intent.getDoubleExtra(FragmentModalSalvar.EXTRA_EVENTO_LATITUDE, 0.0)
         val endereco = intent.getStringExtra(FragmentModalSalvar.EXTRA_EVENTO_ENDERECO)
 
-        if (latitude != 0.0 && longitude != 0.0 && endereco != null) {
-            binding.endereco.setText(endereco, TextView.BufferType.EDITABLE)
+        presenter.carregaMapa(endereco, latitude, longitude)
+    }
 
-            val latLong = LatLng(latitude, longitude)
+    fun marcaNoMapa(endereco: String, longitude: Double, latitude: Double) {
 
-            val marcador = MarkerOptions().position(latLong).title(endereco)
-            mapa.clear()
-            mapa.addMarker(marcador)
+        binding.endereco.setText(endereco, TextView.BufferType.EDITABLE)
 
-            val movimentoCamera = CameraUpdateFactory.newLatLngZoom(latLong, 15.0F)
-            mapa.moveCamera(movimentoCamera)
-        }
+        val latLong = LatLng(latitude, longitude)
+        val marcador = MarkerOptions().position(latLong).title(endereco)
+
+        configuracaoParaMarcarLocalNaTela(latLong, marcador)
     }
 
     private fun configuraFabConfirmar() {
         binding.fabConfirmar.setOnClickListener {
-            if (enderecoSelecionado != null) {
-                mandaParaBottomSheetFragment()
-            } else {
-                Toast.makeText(this, "Porfavor selecione um endereço", Toast.LENGTH_SHORT).show()
-            }
+            presenter.verificaEnderecoSelecionado()
         }
+    }
+
+    fun mostraToast() {
+        Toast.makeText(this, "Porfavor selecione um endereço", Toast.LENGTH_SHORT).show()
     }
 
     //click do icone
@@ -110,16 +110,21 @@ class SelecionaEnderecoActivity : AppCompatActivity() {
         }
     }
 
-    //marcar a localização no google maps
-    private fun marcaLocalizacaoNaTela(localizacao: Address) {
-        val latLong = LatLng(localizacao.latitude, localizacao.longitude)
-        val marcador = MarkerOptions().position(latLong).title(localizacao.getAddressLine(0))
-
+    fun configuracaoParaMarcarLocalNaTela(latLong: LatLng, marcador: MarkerOptions) {
         mapa.clear()
         mapa.addMarker(marcador)
 
         val movimentoCamera = CameraUpdateFactory.newLatLngZoom(latLong, 15.0F)
         mapa.moveCamera(movimentoCamera)
+    }
+
+    //marcar a localização no google maps
+    private fun marcaLocalizacaoNaTela(localizacao: Address) {
+        val latLong = LatLng(localizacao.latitude, localizacao.longitude)
+        val marcador = MarkerOptions().position(latLong).title(localizacao.getAddressLine(0))
+
+        configuracaoParaMarcarLocalNaTela(latLong, marcador)
+
     }
 
     //busca a latitude e longitudo pelo endereço
