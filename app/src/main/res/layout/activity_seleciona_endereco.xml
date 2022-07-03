@@ -10,14 +10,14 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".telas.mapa.SelecionaEnderecoActivity" />
+        tools:context=".telas.seleciona_endereco.SelecionaEnderecoActivity" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/endereco_text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="Buscar Endereço"
+        android:hint="@string/buscar_endereco"
         app:endIconDrawable="@drawable/ic_buscar"
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Confirmar"
+        android:text="@string/confirmar"
         app:icon="@drawable/ic_confirma"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

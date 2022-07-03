@@ -15,13 +15,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.nevesrafael.afazer.databinding.FragmentModalSalvarBinding
 import com.nevesrafael.afazer.model.Evento
-import com.nevesrafael.afazer.telas.mapa.SelecionaEnderecoActivity
+import com.nevesrafael.afazer.telas.seleciona_endereco.SelecionaEnderecoActivity
 
-class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
+class CriaEventoFragment(val quandoClicarNoSalvar: (Evento) -> Unit) :
     BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentModalSalvarBinding
-    private lateinit var presenter: FragmentModalSalvarPresenter
+    private lateinit var presenter: CriaEventoPresenter
 
     companion object {
         const val REQUEST_CODE_ADDRESS = 123
@@ -44,7 +44,7 @@ class FragmentModalSalvar(val quandoClicarNoSalvar: (Evento) -> Unit) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter = FragmentModalSalvarPresenter(this)
+        presenter = CriaEventoPresenter(this)
 
         botaoSalvar()
 

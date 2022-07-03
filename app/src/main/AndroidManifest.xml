@@ -25,7 +25,7 @@
             android:value="AIzaSyDQTXkaqNiVJ3AB7FRZt5TarWqlWTUm8kQ" />
 
         <activity
-            android:name=".telas.mapa.SelecionaEnderecoActivity"
+            android:name=".telas.seleciona_endereco.SelecionaEnderecoActivity"
             android:exported="false"
             android:label="Selecione um Local" />
         <activity

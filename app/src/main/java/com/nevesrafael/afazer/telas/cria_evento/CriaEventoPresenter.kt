@@ -6,7 +6,7 @@ import com.nevesrafael.afazer.model.Evento
 import java.util.*
 
 
-class FragmentModalSalvarPresenter(val tela: FragmentModalSalvar) {
+class CriaEventoPresenter(val tela: CriaEventoFragment) {
 
     private var taEditando: Boolean = false
     private var eventoParaEditar: Evento? = null

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevesrafael.afazer.R
 import com.nevesrafael.afazer.databinding.ActivityTelaInicialBinding
 import com.nevesrafael.afazer.model.Evento
-import com.nevesrafael.afazer.telas.cria_evento.FragmentModalSalvar
+import com.nevesrafael.afazer.telas.cria_evento.CriaEventoFragment
 import com.nevesrafael.afazer.telas.informacoes_evento.InformacoesDoEventoActivity
 
 class TelaInicialActivity : AppCompatActivity() {
@@ -41,10 +41,10 @@ class TelaInicialActivity : AppCompatActivity() {
             // mostrar um modal é responsabilidade da tela, agora o que vai ser feito quando clicar
             // no botão salvar não, isso sim pode ir pro presenter.
 
-            val fragmentModalSalvar = FragmentModalSalvar(quandoClicarNoSalvar = { evento ->
+            val criaEventoFragment = CriaEventoFragment(quandoClicarNoSalvar = { evento ->
                 presenter.quandoClicaNoSalvar(evento)
             })
-            fragmentModalSalvar.show(supportFragmentManager, null)
+            criaEventoFragment.show(supportFragmentManager, null)
 
         }
     }
@@ -91,9 +91,9 @@ class TelaInicialActivity : AppCompatActivity() {
 
     fun mostraModalDeEditar(eventoParaEditar: Evento) {
         val pacotinho = Bundle()
-        pacotinho.putParcelable(FragmentModalSalvar.EXTRA_EVENTO_EDITAR, eventoParaEditar)
+        pacotinho.putParcelable(CriaEventoFragment.EXTRA_EVENTO_EDITAR, eventoParaEditar)
 
-        val fragment = FragmentModalSalvar(quandoClicarNoSalvar = { eventoEditado ->
+        val fragment = CriaEventoFragment(quandoClicarNoSalvar = { eventoEditado ->
             presenter.quandoClicaNoEditar(eventoEditado)
         })
         fragment.arguments = pacotinho

@@ -11,4 +11,7 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="endereco">Endereço</string>
     <string name="horario">Horário</string>
+    <string name="buscar_endereco">Buscar Endereço</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="evento">Evento</string>
 </resources>
