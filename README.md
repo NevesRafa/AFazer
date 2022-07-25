@@ -10,6 +10,7 @@ Para desenvolver utilizei:
 * API do google Maps
 * Fragments
 
+Após finalizado foi implementado a arquitetura MVP.
 
 https://user-images.githubusercontent.com/78914355/180792777-33d133c1-bbb6-46ca-b3b2-fda89071edb7.mp4
 
