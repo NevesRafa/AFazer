@@ -5,7 +5,7 @@ O App foi desenvolvido para colocar em pratica o que estudei ate agora de desemv
 AFazer é um App que permite que você crie enventos, compromissos ou coisas a fazer e salve para que não esqueça.
 
 Para desenvolver utilizei:
-* Liguagem Android
+* Liguagem Kotlin
 * Banco de dados SQLite
 * API do google Maps
 * Fragments
